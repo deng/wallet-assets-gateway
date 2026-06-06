@@ -87,9 +87,9 @@ export const openApiSpec = {
                   },
                   provider: {
                     type: 'string',
-                    description: 'Data provider: "auto" (default, OKX first with CoinStats fallback), "coinstats", "okx"',
+                    description: 'Data provider: "auto" (default, CoinStats with OKX/TRON Grid fallback), "coinstats", "okx", "tron"',
                     example: 'auto',
-                    enum: ['auto', 'coinstats', 'okx'],
+                    enum: ['auto', 'coinstats', 'okx', 'tron'],
                   },
                 },
               },

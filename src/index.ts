@@ -4,6 +4,7 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { getChainInfo, getAllChains } from './chains';
 import { openApiSpec } from './openapi';
 import { fetchOkxAssets, isOkxChainSupported } from './providers/okx';
+import { fetchTronAssets, isTronChainSupported } from './providers/tron';
 
 // ---------------------------------------------------------------------------
 // Exported types
@@ -268,6 +269,17 @@ app.post('/api/v1/assets', async (c) => {
     }
   }
 
+  // Explicit TRON: try TRON Grid API only, fail on error
+  if (selected === 'tron') {
+    try {
+      const result = await fetchTronAssets(address, chain);
+      setCache(cacheKey, result, ttl);
+      return c.json({ success: true, data: result } satisfies AssetsResponse);
+    } catch (err) {
+      return c.json({ success: false, error: (err as Error).message } satisfies AssetsResponse, 502);
+    }
+  }
+
   // Try CoinStats (auto mode will fall back to OKX on failure)
   try {
     const csData = await fetchFromCoinStats(c.env, connectionId, address);
@@ -275,19 +287,46 @@ app.post('/api/v1/assets', async (c) => {
     setCache(cacheKey, normalized, ttl);
     return c.json({ success: true, data: normalized } satisfies AssetsResponse);
   } catch (err) {
-    // Auto mode: fall back to OKX for supported chains
-    if (selected === 'auto' && isOkxChainSupported(chain)) {
-      console.log(`CoinStats failed for ${chain}, trying OKX: ${(err as Error).message}`);
-      try {
-        const result = await fetchOkxAssets(c.env, address, chain);
-        setCache(cacheKey, result, ttl);
-        return c.json({ success: true, data: result } satisfies AssetsResponse);
-      } catch (okxErr) {
-        console.log(`OKX also failed for ${chain}: ${(okxErr as Error).message}`);
-        return handleUpstreamError(okxErr);
+    // Auto mode: fall back to OKX (EVM chains) or TRON Grid (TRX chains)
+    if (selected === 'auto') {
+      const fallbacks: Array<{
+        name: string;
+        fetch: () => Promise<AssetsResponseData>;
+      }> = [];
+
+      if (isOkxChainSupported(chain)) {
+        fallbacks.push({
+          name: 'OKX',
+          fetch: () => fetchOkxAssets(c.env, address, chain),
+        });
       }
+      if (isTronChainSupported(chain)) {
+        fallbacks.push({
+          name: 'TRON',
+          fetch: () => fetchTronAssets(address, chain),
+        });
+      }
+
+      let lastError: unknown = err;
+      for (const fb of fallbacks) {
+        try {
+          console.log(
+            `CoinStats failed for ${chain}, trying ${fb.name}: ${(err as Error).message}`,
+          );
+          const result = await fb.fetch();
+          setCache(cacheKey, result, ttl);
+          return c.json({ success: true, data: result } satisfies AssetsResponse);
+        } catch (fbErr) {
+          lastError = fbErr;
+          console.log(
+            `${fb.name} also failed for ${chain}: ${(fbErr as Error).message}`,
+          );
+        }
+      }
+      // All fallbacks exhausted
+      return handleUpstreamError(lastError);
     }
-    // CoinStats-only or fallback not available
+    // No fallback applicable
     return handleUpstreamError(err);
   }
 });

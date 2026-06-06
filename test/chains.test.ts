@@ -23,7 +23,7 @@ describe('chains', () => {
   it('should return all chains', async () => {
     const { getAllChains } = await createChains();
     const chains = getAllChains();
-    expect(chains.length).toBeGreaterThanOrEqual(16);
+    expect(chains.length).toBeGreaterThanOrEqual(19);
     expect(chains.map(c => c.caip2)).toContain('eip155:1');
     expect(chains.map(c => c.caip2)).toContain('solana:5eykt4UsCvUn1EigmU9PfTkrPdbzpyCPPn');
   });

@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "generate-sdk": "./scripts/generate-flutter-sdk.sh"
+    "generate-sdk": "./scripts/generate-flutter-sdk.sh",
+    "update-trc20-tokens": "npx tsx scripts/update-trc20-tokens.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",

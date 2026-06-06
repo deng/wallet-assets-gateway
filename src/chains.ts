@@ -129,6 +129,24 @@ const CHAIN_MAP: Record<string, ChainInfo> = {
     nativeCurrency: 'ETH',
     okxChainIndex: '59144',
   },
+  'tron:0x2b6653dc': {
+    caip2: 'tron:0x2b6653dc',
+    name: 'TRON',
+    connectionId: 'tron',
+    nativeCurrency: 'TRX',
+  },
+  'tron:0x94a9059e': {
+    caip2: 'tron:0x94a9059e',
+    name: 'TRON Shasta Testnet',
+    connectionId: 'tron',
+    nativeCurrency: 'TRX',
+  },
+  'tron:0xcd8690dc': {
+    caip2: 'tron:0xcd8690dc',
+    name: 'TRON Nile Testnet',
+    connectionId: 'tron',
+    nativeCurrency: 'TRX',
+  },
 };
 
 export function getChainInfo(caip2: string): ChainInfo | undefined {
