@@ -1,0 +1,26 @@
+{
+  "name": "wallet-assets-gateway",
+  "version": "0.1.0",
+  "description": "Wallet asset holdings gateway - proxies CoinStats API for cross-chain token balances",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "cp -n .env.example .env 2>/dev/null; wrangler dev",
+    "dev": "wrangler dev",
+    "deploy": "dotenv -- wrangler deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "generate-sdk": "./scripts/generate-flutter-sdk.sh"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.0.0",
+    "dotenv-cli": "^11.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0",
+    "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "@hono/swagger-ui": "^0.6.1",
+    "hono": "^4.12.16"
+  }
+}
