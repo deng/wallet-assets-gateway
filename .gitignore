@@ -1,0 +1,5 @@
+node_modules/
+wallet-assets-gateway-flutter/
+CLAUDE.md
+wrangler.toml
+.env
