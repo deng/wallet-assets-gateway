@@ -150,7 +150,7 @@ describe('GET /api/v1/chains', () => {
     expect(eth!.nativeCurrency).toBe('ETH');
 
     // Check Solana is included
-    const sol = data.find((c) => c.chain === 'solana:5eykt4UsCvUn1EigmU9PfTkrPdbzpyCPPn');
+    const sol = data.find((c) => c.chain === 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp');
     expect(sol).toBeDefined();
     expect(sol!.nativeCurrency).toBe('SOL');
   });

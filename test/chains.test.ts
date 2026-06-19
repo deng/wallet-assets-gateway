@@ -25,7 +25,7 @@ describe('chains', () => {
     const chains = getAllChains();
     expect(chains.length).toBeGreaterThanOrEqual(19);
     expect(chains.map(c => c.caip2)).toContain('eip155:1');
-    expect(chains.map(c => c.caip2)).toContain('solana:5eykt4UsCvUn1EigmU9PfTkrPdbzpyCPPn');
+    expect(chains.map(c => c.caip2)).toContain('solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp');
   });
 
   it('should include OKX chainIndex for EVM chains', async () => {
@@ -38,7 +38,7 @@ describe('chains', () => {
 
   it('should include OKX chainIndex for Solana', async () => {
     const { getChainInfo } = await createChains();
-    expect(getChainInfo('solana:5eykt4UsCvUn1EigmU9PfTkrPdbzpyCPPn')!.okxChainIndex).toBe('501');
+    expect(getChainInfo('solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp')!.okxChainIndex).toBe('501');
   });
 
   it('should not have OKX chainIndex for Bitcoin', async () => {

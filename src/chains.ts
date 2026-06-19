@@ -67,8 +67,8 @@ const CHAIN_MAP: Record<string, ChainInfo> = {
     nativeCurrency: 'FTM',
     okxChainIndex: '250',
   },
-  'solana:5eykt4UsCvUn1EigmU9PfTkrPdbzpyCPPn': {
-    caip2: 'solana:5eykt4UsCvUn1EigmU9PfTkrPdbzpyCPPn',
+  'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp': {
+    caip2: 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp',
     name: 'Solana',
     connectionId: 'solana',
     nativeCurrency: 'SOL',
