@@ -5,6 +5,7 @@ import { getChainInfo } from '../chains';
 // Stellar Horizon API
 // ---------------------------------------------------------------------------
 const HORIZON_MAINNET = 'https://horizon.stellar.org';
+const HORIZON_TESTNET = 'https://horizon-testnet.stellar.org';
 
 /**
  * Fetch wallet assets from Stellar Horizon API for a given address.
@@ -20,7 +21,8 @@ export async function fetchStellarAssets(
     throw new Error(`Unsupported chain: '${caip2Chain}'`);
   }
 
-  const res = await fetch(`${HORIZON_MAINNET}/accounts/${encodeURIComponent(address)}`, {
+  const horizonUrl = chainInfo.testnet ? HORIZON_TESTNET : HORIZON_MAINNET;
+  const res = await fetch(`${horizonUrl}/accounts/${encodeURIComponent(address)}`, {
     signal: AbortSignal.timeout(10_000),
   });
 
