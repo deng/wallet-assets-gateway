@@ -360,10 +360,10 @@ describe('TRON chain config', () => {
 
     const shasta = data.find((c) => c.chain === 'tron:0x94a9059e');
     expect(shasta).toBeDefined();
-    expect(shasta!.name).toBe('TRON Shasta Testnet');
+    expect(shasta!.name).toBe('TRON Shasta');
 
     const nile = data.find((c) => c.chain === 'tron:0xcd8690dc');
     expect(nile).toBeDefined();
-    expect(nile!.name).toBe('TRON Nile Testnet');
+    expect(nile!.name).toBe('TRON Nile');
   });
 });
