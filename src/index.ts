@@ -5,6 +5,7 @@ import { getChainInfo, getAllChains } from './chains';
 import { openApiSpec } from './openapi';
 import { fetchOkxAssets, isOkxChainSupported } from './providers/okx';
 import { fetchTronAssets, isTronChainSupported } from './providers/tron';
+import { fetchStellarAssets, isStellarChainSupported } from './providers/stellar';
 
 // ---------------------------------------------------------------------------
 // Exported types
@@ -280,7 +281,18 @@ app.post('/api/v1/assets', async (c) => {
     }
   }
 
-  // Try CoinStats (auto mode will fall back to OKX on failure)
+  // Explicit Stellar: try Horizon API only, fail on error
+  if (selected === 'stellar') {
+    try {
+      const result = await fetchStellarAssets(address, chain);
+      setCache(cacheKey, result, ttl);
+      return c.json({ success: true, data: result } satisfies AssetsResponse);
+    } catch (err) {
+      return c.json({ success: false, error: (err as Error).message } satisfies AssetsResponse, 502);
+    }
+  }
+
+  // Try CoinStats (auto mode will fall back to OKX/TRON/Stellar on failure)
   try {
     const csData = await fetchFromCoinStats(c.env, connectionId, address);
     const normalized = normalizeAssets(csData, address, chain);
@@ -304,6 +316,12 @@ app.post('/api/v1/assets', async (c) => {
         fallbacks.push({
           name: 'TRON',
           fetch: () => fetchTronAssets(address, chain),
+        });
+      }
+      if (isStellarChainSupported(chain)) {
+        fallbacks.push({
+          name: 'Stellar',
+          fetch: () => fetchStellarAssets(address, chain),
         });
       }
 
